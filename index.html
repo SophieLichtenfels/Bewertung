@@ -10,7 +10,6 @@
       padding: 20px;
       max-width: 700px;
       margin: auto;
-      text-align: center;
     }
     img.banner {
       width: 300px;
@@ -22,23 +21,37 @@
       margin-right: auto;
     }
     h1 {
+      text-align: center;
       color: #333;
+    }
+    .form-wrapper {
+      transform: scale(1.1);
+      transform-origin: top left;
+      margin-top: 30px;
+      overflow: hidden;
     }
   </style>
 </head>
 <body>
 
   <img src="IMG_1443.jpeg" alt="Kollegenbild" class="banner" />
-  <h1> ⭐ 📝</h1>
+  <h1>Sophie's Arbeitsbewertung 📝</h1>
 
-  <!-- Google Form iframe -->
-  <iframe 
-    src="https://docs.google.com/forms/d/e/1FAIpQLScAiLSGzLwuTI-YVz2lw_vj-fX9bqETk5LU5OklHst_b6dxcg/viewform?usp=header" 
-    width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0">
-    Wird geladen…
-  </iframe>
+  <!-- Google Form eingebettet -->
+  <div class="form-wrapper">
+    <iframe 
+      src="https://docs.google.com/forms/d/e/1FAIpQLScAiLSGzLwuTI-YVz2lw_vj-fX9bqETk5LU5OklHst_b6dxcg/viewform?embedded=true" 
+      width="100%" 
+      height="1800" 
+      frameborder="0" 
+      marginheight="0" 
+      marginwidth="0">
+      Wird geladen…
+    </iframe>
+  </div>
 
 </body>
 </html>
+
 
 
