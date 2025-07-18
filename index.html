@@ -5,16 +5,12 @@
   <title>Bewertung Sophie Lichtenfels</title>
   <style>
     body {
-      body {
-  font-family: sans-serif;
-  /* linearer Verlauf von Blau zu Hellblau */
-  background: linear-gradient(135deg, #007acc, #66b2ff);
-  padding: 20px;
-  max-width: 700px;
-  margin: auto;
-  color: #333;
-}
-
+      font-family: sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+      text-align: center;
     }
     img.banner {
       width: 300px;
@@ -26,168 +22,22 @@
       margin-right: auto;
     }
     h1 {
-      text-align: center;
       color: #333;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 10px;
-      display: block;
-    }
-    .stars {
-      display: flex;
-      gap: 5px;
-      margin: 5px 0 15px;
-    }
-    .stars input {
-      display: none;
-    }
-    .stars label {
-      font-size: 25px;
-      cursor: pointer;
-      color: #ccc;
-      transition: color 0.2s;
-    }
-    .stars input:checked ~ label,
-    .stars label:hover,
-    .stars label:hover ~ label {
-      color: gold;
-    }
-    textarea, input[type="text"] {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
-      background: #007acc;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .thanks {
-      margin-top: 20px;
-      color: green;
-      font-weight: bold;
-    }
-    #exportCsv {
-      background: #28a745;
-      color: #fff;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      display: block;
-      margin: 20px auto 0 auto;
-      font-size: 16px;
     }
   </style>
 </head>
 <body>
 
   <img src="IMG_1443.jpeg" alt="Kollegenbild" class="banner" />
-  <h1>Sophie's Arbeitsbewertung 📝</h1>
+  <h1> ⭐ 📝</h1>
 
-  <form id="form">
-    <label>Dein Name:</label>
-    <input type="text" name="name" required />
+  <!-- Google Form iframe -->
+  <iframe 
+    src="https://docs.google.com/forms/d/e/1FAIpQLScAiLSGzLwuTI-YVz2lw_vj-fX9bqETk5LU5OklHst_b6dxcg/viewform?usp=header" 
+    width="100%" height="900" frameborder="0" marginheight="0" marginwidth="0">
+    Wird geladen…
+  </iframe>
 
-    <div id="criteria"></div>
-
-    <label>Kommentar (optional):</label>
-    <textarea name="comment" placeholder="Dein Feedback..."></textarea>
-
-    <button type="submit">Absenden</button>
-    <div class="thanks" id="thanksMessage" style="display:none;">Danke für deine Bewertung! ✅</div>
-  </form>
-
-  <button id="exportCsv">Bewertungen als CSV exportieren</button>
-
-  <script>
-    const criteria = [
-      "🧑‍💼 Zuverlässigkeit",
-      "🎤 Meeting-Unterhaltung",
-      "🤡 Humorlevel",
-      "🧠 Office-Know-how",
-      "🤝 Teamfähigkeit"
-    ];
-
-    const container = document.getElementById('criteria');
-
-    criteria.forEach((crit, index) => {
-      const id = `crit${index}`;
-      const wrapper = document.createElement('div');
-      wrapper.innerHTML = `
-        <label>${crit}</label>
-        <div class="stars">
-          ${[5,4,3,2,1].map(star => `
-            <input type="radio" id="${id}_${star}" name="${id}" value="${star}" />
-            <label for="${id}_${star}">★</label>
-          `).join('')}
-        </div>
-      `;
-      container.appendChild(wrapper);
-    });
-
-    document.getElementById('form').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const data = {
-        name: this.name.value,
-        comment: this.comment.value,
-        timestamp: new Date().toISOString()
-      };
-
-      criteria.forEach((_, index) => {
-        const rating = this.querySelector(`input[name="crit${index}"]:checked`);
-        data[`crit${index}`] = rating ? parseInt(rating.value) : null;
-      });
-
-      let alleBewertungen = JSON.parse(localStorage.getItem("bewertungen")) || [];
-      alleBewertungen.push(data);
-      localStorage.setItem("bewertungen", JSON.stringify(alleBewertungen));
-
-      this.reset();
-      document.getElementById("thanksMessage").style.display = "block";
-    });
-
-    document.getElementById('exportCsv').addEventListener('click', () => {
-      const bewertungen = JSON.parse(localStorage.getItem('bewertungen')) || [];
-      if (bewertungen.length === 0) {
-        alert('Keine Bewertungen zum Exportieren vorhanden!');
-        return;
-      }
-
-      const headers = ['Name', 'Kommentar', 'Timestamp', ...criteria];
-
-      const csvRows = bewertungen.map(bw => {
-        const critValues = criteria.map((_, i) => bw[`crit${i}`] !== null && bw[`crit${i}`] !== undefined ? bw[`crit${i}`] : '');
-        return [
-          `"${bw.name.replace(/"/g, '""')}"`,
-          `"${(bw.comment || '').replace(/"/g, '""')}"`,
-          `"${bw.timestamp}"`,
-          ...critValues
-        ].join(';');
-      });
-
-      const csvContent = [headers.join(';'), ...csvRows].join('\n');
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'bewertungen.csv';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-    });
-  </script>
 </body>
 </html>
 
